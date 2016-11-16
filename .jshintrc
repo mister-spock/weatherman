@@ -1,0 +1,13 @@
+/* @see "http://jshint.com/docs/options/" */
+{
+    "esversion": 6,
+
+    "curly": true,
+    "eqeqeq": true,
+    "undef": true,
+
+    "browser": true,
+    "devel": true,
+    "mocha": true,
+    "node": true
+}
