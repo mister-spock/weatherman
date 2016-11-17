@@ -1,0 +1,13 @@
+{{!-- app/renderer/js/tpl/view.hbs --}}
+{{#if error}}
+    {{!-- TODO: Show error screen. Suggest to refresh app --}}
+{{else}}
+    <div class="">
+        <ul>
+            <li><img src="data:image/png;base64,{{ icon }}"/></li>
+            <li>{{ temp }}</li>
+            <li>{{ pressure }}</li>
+            <li>{{ humidity }}</li>
+        </ul>
+    </div>
+{{/if}}
