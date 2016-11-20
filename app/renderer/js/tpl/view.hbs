@@ -1,6 +1,6 @@
 {{!-- app/renderer/js/tpl/view.hbs --}}
 {{#if error}}
-    {{!-- TODO: Show error screen. Suggest to refresh app --}}
+    <p>{{ message }}</p>
 {{else}}
     <div class="">
         <ul>
@@ -8,6 +8,7 @@
             <li>{{ temp }}</li>
             <li>{{ pressure }}</li>
             <li>{{ humidity }}</li>
+            <li>{{ cityName }}, {{ country }}</li>
         </ul>
     </div>
 {{/if}}

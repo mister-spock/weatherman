@@ -11,7 +11,8 @@ const
     App = Backbone.View.extend({
 
         initialize: function() {
-            this.error = false;
+            this.error        = false;
+            this.errorMessage = '';
 
             ipcRenderer.send('api-enquire');
             ipcRenderer.on('api-reply', (event, data) => {
@@ -34,8 +35,9 @@ const
                 this.render();
             });
 
-            ipcRenderer.on('render-error', (event) => {
-                this.error = true;
+            ipcRenderer.on('render-error', (event, errorMessage) => {
+                this.error        = true;
+                this.errorMessage = errorMessage
                 this.render();
             });
         },
@@ -44,7 +46,10 @@ const
             let html = '';
 
             if (this.error) {
-                html = tpl({ error: this.error });
+                html = tpl({
+                    error   : this.error,
+                    message : this.errorMessage
+                });
             }
             else {
                 html = tpl(this.data);
