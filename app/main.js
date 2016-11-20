@@ -1,7 +1,10 @@
 // main.js
 'use strict';
 
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const
+    {enquireApi, getIcon}                 = require('./core/enquire'),
+    {app, BrowserWindow, ipcMain, dialog} = require('electron');
+
 let win;
 
 function createWindow() {
@@ -29,10 +32,24 @@ app.on('activate', () => {
     }
 });
 
-ipcMain.on('api-error', (event, message) => {
-    dialog.showErrorBox('API request error!', message);
+ipcMain.on('api-enquire', (event) => {
+    enquireApi()
+        .then((data) => {
+            event.sender.send('api-reply', data);
+        })
+        .catch((err) => {
+            event.sender.send('render-error');
+            dialog.showErrorBox('API request error!', message);
+        });
 });
 
-ipcMain.on('icon-error', (event, message) => {
-    dialog.showErrorBox('Icon fetch error!', message);
+ipcMain.on('icon-enquire', (event, iconCode) => {
+    getIcon(iconCode)
+        .then((iconEncoded) => {
+            event.sender.send('icon-reply', iconEncoded);
+        })
+        .catch((err) => {
+            event.sender.send('render-error');
+            dialog.showErrorBox('Icon request error!', message);
+        });
 });

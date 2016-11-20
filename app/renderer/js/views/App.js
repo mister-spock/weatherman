@@ -2,26 +2,42 @@
 'use strict';
 
 const
-    $          = require('jquery'),
-    Backbone   = require('backbone'),
-    handlebars = require('handlebars'),
-    tpl        = require('../tpl/view'),
-
-    {ipcRenderer}         = require('electron'),
-    {enquireApi, getIcon} = require('../../../core/enquire'),
+    $             = require('jquery'),
+    Backbone      = require('backbone'),
+    handlebars    = require('handlebars'),
+    tpl           = require('../tpl/view'),
+    {ipcRenderer} = require('electron'),
 
     App = Backbone.View.extend({
 
         initialize: function() {
             this.error = false;
 
-            enquireApi()
-                .then(this._on_data.bind(this))
-                .catch((err) => {
-                    this.error = true;
-                    ipcRenderer.send('api-error', err);
-                    this.render();
-                });
+            ipcRenderer.send('api-enquire');
+            ipcRenderer.on('api-reply', (event, data) => {
+                let dataParsed = JSON.parse(data),
+                    iconCode   = dataParsed.weather[0].icon;
+
+                this.data = {
+                    temp     : dataParsed.main.temp,
+                    pressure : dataParsed.main.pressure,
+                    humidity : dataParsed.main.humidity,
+                    cityName : dataParsed.name,
+                    country  : dataParsed.sys.country
+                };
+
+                ipcRenderer.send('icon-enquire', iconCode);
+            });
+
+            ipcRenderer.on('icon-reply', (event, iconEncoded) => {
+                this.data.icon = iconEncoded;
+                this.render();
+            });
+
+            ipcRenderer.on('render-error', (event) => {
+                this.error = true;
+                this.render();
+            });
         },
 
         render: function() {
@@ -31,35 +47,12 @@ const
                 html = tpl({ error: this.error });
             }
             else {
-                html = tpl({
-                    // TODO: What data to pass to the template
-                });
+                html = tpl(this.data);
             }
 
             this.$el.html(html);
 
             return this;
-        },
-
-        _on_data: function(data) {
-            let dataParsed = JSON.parse(data);
-
-            getIcon(dataParsed.weather[0].icon)
-                .then((encodedIcon) => {
-                    this.icon     = encodedIcon;
-                    this.temp     = dataParsed.main.temp;
-                    this.pressure = dataParsed.main.pressure;
-                    this.humidity = dataParsed.main.humidity;
-                    this.cityName = dataParsed.name;
-                    this.country  = dataParsed.sys.country;
-
-                    this.render();
-                })
-                .catch((err) => {
-                    this.error = true;
-                    ipcRenderer.send('icon-error', err);
-                    this.render();
-                });
         }
     });
 
