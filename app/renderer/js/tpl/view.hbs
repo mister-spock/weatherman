@@ -2,13 +2,20 @@
 {{#if error}}
     <p>{{ message }}</p>
 {{else}}
-    <div class="">
-        <ul>
-            <li><img src="data:image/png;base64,{{ icon }}"/></li>
-            <li>{{ temp }}</li>
-            <li>{{ pressure }}</li>
-            <li>{{ humidity }}</li>
-            <li>{{ cityName }}, {{ country }}</li>
-        </ul>
+    <table class="main-data">
+        <tr>
+            <td class="main-data-icon">
+                <img src="data:image/png;base64,{{ icon }}"/>
+            </td>
+            <td class="main-data-temp">
+                {{ temp }} &#8451;
+            </td>
+            <td class="main-data-hum">
+                {{ humidity }} &#37;
+            </td>
+        </tr>
+    </table>
+    <div class="city-data">
+        {{ cityName }}, {{ country }}
     </div>
 {{/if}}

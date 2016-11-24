@@ -37,7 +37,7 @@ const
 
             ipcRenderer.on('render-error', (event, errorMessage) => {
                 this.error        = true;
-                this.errorMessage = errorMessage
+                this.errorMessage = errorMessage;
                 this.render();
             });
         },

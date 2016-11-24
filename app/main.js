@@ -8,10 +8,16 @@ const
 let win;
 
 function createWindow() {
-    win = new BrowserWindow({ width: 200, height: 100 });
+    win = new BrowserWindow({
+        width           : 196,
+        height          : 95,
+        resizable       : false,
+        titleBarStyle   : 'hidden',
+        useContentSize  : true,
+        backgroundColor : '#161e35'
+    });
 
     win.loadURL(`file://${__dirname}/index.html`);
-    // win.webContents.openDevTools();
 
     win.on('closed', () => {
         win = null;
@@ -39,7 +45,7 @@ ipcMain.on('api-enquire', (event) => {
         })
         .catch((err) => {
             event.sender.send('render-error');
-            dialog.showErrorBox('API request error!', message);
+            dialog.showErrorBox('API request error!', err.message);
         });
 });
 
@@ -50,6 +56,6 @@ ipcMain.on('icon-enquire', (event, iconCode) => {
         })
         .catch((err) => {
             event.sender.send('render-error');
-            dialog.showErrorBox('Icon request error!', message);
+            dialog.showErrorBox('Icon request error!', err.message);
         });
 });
