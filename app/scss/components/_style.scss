@@ -2,32 +2,36 @@
 
 body {
     color: $fg-color-text;
+}
 
-    table.main-data {
-        margin-top: $table-top-margin;
-        width: $icon-section-size + $temp-section-size + $hum-section-size;
-        height: $icon-section-size;
-        border-collapse: collapse;
+table.main-data {
+    margin-top: $table-top-margin;
+    width: $icon-section-size + $temp-section-size + $hum-section-size;
+    height: $icon-section-size;
+    border-collapse: collapse;
 
-        td {
-            text-align: center;
-            padding: 0;
-        }
-
-        td.main-data-icon {
-            width: $icon-section-size;
-        }
-
-        td.main-data-temp {
-            width: $temp-section-size;
-        }
-
-        td.main-data-hum {
-            width: $hum-section-size;
-        }
-    }
-
-    .city-data {
+    td {
         text-align: center;
+        padding: 0;
     }
+
+    td.main-data-icon {
+        width: $icon-section-size;
+    }
+
+    td.main-data-temp {
+        width: $temp-section-size;
+    }
+
+    td.main-data-hum {
+        width: $hum-section-size;
+    }
+}
+
+.city-data {
+    text-align: center;
+}
+
+.draggable-area {
+    -webkit-app-region: drag;
 }

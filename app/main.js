@@ -2,6 +2,7 @@
 'use strict';
 
 const
+    iconCache                             = require('./core/localcache').getInstance(),
     {enquireApi, getIcon}                 = require('./core/enquire'),
     {app, BrowserWindow, ipcMain, dialog} = require('electron');
 
@@ -50,9 +51,16 @@ ipcMain.on('api-enquire', (event) => {
 });
 
 ipcMain.on('icon-enquire', (event, iconCode) => {
+    let cachedIcon = iconCache.get(iconCode);
+
+    if (cachedIcon) {
+        event.sender.send('icon-reply', cachedIcon);
+    }
+
     getIcon(iconCode)
         .then((iconEncoded) => {
             event.sender.send('icon-reply', iconEncoded);
+            iconCache.set(iconCode, iconEncoded);
         })
         .catch((err) => {
             event.sender.send('render-error');

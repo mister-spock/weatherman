@@ -6,6 +6,7 @@ const
     Backbone      = require('backbone'),
     handlebars    = require('handlebars'),
     tpl           = require('../tpl/view'),
+    conf          = require('../../../config/conf'),
     {ipcRenderer} = require('electron'),
 
     App = Backbone.View.extend({
@@ -14,7 +15,6 @@ const
             this.error        = false;
             this.errorMessage = '';
 
-            ipcRenderer.send('api-enquire');
             ipcRenderer.on('api-reply', (event, data) => {
                 let dataParsed = JSON.parse(data),
                     iconCode   = dataParsed.weather[0].icon;
@@ -40,6 +40,10 @@ const
                 this.errorMessage = errorMessage;
                 this.render();
             });
+
+            this.send_request();
+
+            setInterval(this.send_request, conf.apiInterval);
         },
 
         render: function() {
@@ -58,6 +62,10 @@ const
             this.$el.html(html);
 
             return this;
+        },
+
+        send_request: function() {
+            ipcRenderer.send('api-enquire');
         }
     });
 
