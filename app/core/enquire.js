@@ -56,10 +56,9 @@ function getIconBase64(code) {
                 fail('Code ' + response.statusCode + '::Non-OK status received while getting Icon!');
             }
 
-            response.on('data', (chunk) => { console.log(typeof chunk); data.push(chunk); });
+            response.on('data', (chunk) => { data.push(chunk); });
             response.on('end', () => {
-                let binary = Buffer.concat(data);
-                resolve(binary.toString('base64'));
+                resolve(Buffer.concat(data).toString('base64'));
             });
         })
         .on('error', (err) => { fail('Icon request Error: ' + err.message); });
